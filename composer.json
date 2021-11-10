@@ -1,24 +1,25 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "lahirulhr/laravel-payhere",
+    "description": "This is my package laravel-payhere",
     "keywords": [
-        ":vendor_name",
+        "lahirulhr",
         "laravel",
-        ":package_slug"
+        "laravel-payhere"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/lahirulhr/laravel-payhere",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "LaHiRu",
+            "email": "lahirulhr@gmail.com",
             "role": "Developer"
         }
     ],
     "require": {
         "php": "^8.0",
-        "spatie/laravel-package-tools": "^1.9.2",
-        "illuminate/contracts": "^8.37"
+        "guzzlehttp/guzzle": "^7.4",
+        "illuminate/contracts": "^8.37",
+        "spatie/laravel-package-tools": "^1.9.2"
     },
     "require-dev": {
         "nunomaduro/collision": "^5.10",
@@ -34,13 +35,13 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories"
+            "Lahirulhr\\PayHere\\": "src",
+            "Lahirulhr\\PayHere\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "Lahirulhr\\PayHere\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -54,10 +55,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Lahirulhr\\PayHere\\PayHereServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\SkeletonFacade"
+                "PayHere": "Lahirulhr\\PayHere\\PayHereFacade"
             }
         }
     },

@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Lahirulhr\PayHere\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class PayHereCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-payhere';
 
     public $description = 'My command';
 

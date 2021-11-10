@@ -1,6 +1,6 @@
 <?php
 
-namespace VendorName\Skeleton\Database\Factories;
+namespace Lahirulhr\PayHere\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
