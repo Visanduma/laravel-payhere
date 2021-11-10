@@ -15,29 +15,30 @@ class PayHereClient
 
     public function submit()
     {
-        $formData = array_merge($this->authData(),$this->required_data,$this->optional_data);
+        $formData = array_merge($this->authData(), $this->required_data, $this->optional_data);
 
         return Http::asForm()
-            ->post(config('payhere.api_endpoint').$this->url,$formData);
-
-
+            ->post(config('payhere.api_endpoint').$this->url, $formData);
     }
 
     public function data(array $array)
     {
         $this->required_data = $array;
+
         return $this;
     }
 
     public function successUrl($url)
     {
         $this->success_url = $url;
+
         return $this;
     }
 
     public function failUrl($url)
     {
         $this->fail_url = $url;
+
         return $this;
     }
 
@@ -54,9 +55,9 @@ class PayHereClient
     public function getAccessToken()
     {
         $url = config('payhere.api_endpoint')."merchant/v1/oauth/token";
-        $data =  Http::asForm()->withToken(config('payhere.auth_code'),'Basic')
-            ->post($url,[
-                'grant_type' => 'client_credentials'
+        $data = Http::asForm()->withToken(config('payhere.auth_code'), 'Basic')
+            ->post($url, [
+                'grant_type' => 'client_credentials',
             ]);
 
         return $data->json();

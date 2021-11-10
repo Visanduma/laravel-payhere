@@ -2,9 +2,9 @@
 
 namespace Lahirulhr\PayHere;
 
+use Lahirulhr\PayHere\Commands\PayHereCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Lahirulhr\PayHere\Commands\PayHereCommand;
 
 class PayHereServiceProvider extends PackageServiceProvider
 {

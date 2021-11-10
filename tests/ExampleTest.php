@@ -6,9 +6,9 @@ it('can read configs', function () {
     expect(config('payhere.api_endpoint'))->toBeString();
 });
 
-it('can create checkout page',
+it(
+    'can create checkout page',
     function () {
-
         $faker = \Faker\Factory::create();
 
 
@@ -23,7 +23,7 @@ it('can create checkout page',
             'order_id' => $faker->asciify(),
             'items' => $faker->word(),
             'currency' => 'USD',
-            'amount' => $faker->numberBetween(100,1000)
+            'amount' => $faker->numberBetween(100, 1000),
         ];
 
         $client = PayHere::checkOut()
@@ -33,11 +33,12 @@ it('can create checkout page',
             ->submit();
 
         expect($client->status())->toEqual(200);
-    });
+    }
+);
 
-it('can create recurring checkout page',
+it(
+    'can create recurring checkout page',
     function () {
-
         $faker = \Faker\Factory::create();
 
 
@@ -52,7 +53,7 @@ it('can create recurring checkout page',
             'order_id' => $faker->asciify(),
             'items' => $faker->word(),
             'currency' => 'USD',
-            'amount' => $faker->numberBetween(100,1000)
+            'amount' => $faker->numberBetween(100, 1000),
         ];
 
         $client = PayHere::subscription()
@@ -64,11 +65,11 @@ it('can create recurring checkout page',
             ->submit();
 
         expect($client->status())->toEqual(200);
-    });
+    }
+);
 
 
-it('can create preapproval page',function (){
-
+it('can create preapproval page', function () {
     $faker = \Faker\Factory::create();
 
 
@@ -94,7 +95,7 @@ it('can create preapproval page',function (){
     expect($client->status())->toEqual(200);
 });
 
-it('can get access token',function(){
+it('can get access token', function () {
     $client = (new \Lahirulhr\PayHere\Helpers\PayHereClient());
     expect($client->getAccessToken()['token_type'])->toEqual('bearer');
 });
