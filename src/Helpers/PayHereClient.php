@@ -21,7 +21,7 @@ class PayHereClient
         $client = Http::asForm()
             ->post(config('payhere.api_endpoint').$this->url, $formData);
 
-        if (!$client->body()) {
+        if (! $client->body()) {
             throw new PayHereException();
         } else {
             return $client;
