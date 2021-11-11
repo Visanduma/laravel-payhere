@@ -46,10 +46,19 @@ class PayHereRestClient
 
         $output = $client->json();
 
-        if ($output && $output['status'] < 0) {
-            throw new PayHereException($output['msg']);
-        } else {
-            return $output;
+        if (!$output) {
+            throw new PayHereException("No data from API !");
         }
+
+        if (array_key_exists('error',$output)) {
+            throw new PayHereException($output['error_description']);
+        }
+
+
+        if (array_key_exists('status',$output) && $output['status'] < 0) {
+            throw new PayHereException($output['msg']);
+        }
+        return $output;
+
     }
 }

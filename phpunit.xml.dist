@@ -36,4 +36,12 @@
     <logging>
         <junit outputFile="build/report.junit.xml"/>
     </logging>
+    <php>
+        <env name="PAYHERE_API" value="https://sandbox.payhere.lk/" force="true" />
+        <env name="PAYHERE_MERCHANT_ID" value="" force="true" />
+        <env name="PAYHERE_MERCHANT_SECRET" value="" force="true" />
+        <env name="PAYHERE_APP_ID" value="" force="true" />
+        <env name="PAYHERE_APP_SECRET" value="" force="true" />
+        <env name="PAYHERE_AUTH_CODE" value="" force="true" />
+    </php>
 </phpunit>

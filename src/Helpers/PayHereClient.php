@@ -3,6 +3,7 @@
 namespace Lahirulhr\PayHere\Helpers;
 
 use Illuminate\Support\Facades\Http;
+use Lahirulhr\PayHere\Exceptions\PayHereException;
 
 class PayHereClient
 {
@@ -17,8 +18,14 @@ class PayHereClient
     {
         $formData = array_merge($this->authData(), $this->required_data, $this->optional_data);
 
-        return Http::asForm()
+        $client = Http::asForm()
             ->post(config('payhere.api_endpoint').$this->url, $formData);
+
+        if (!$client->body()) {
+            throw new PayHereException();
+        } else {
+            return $client;
+        }
     }
 
     public function data(array $array)
