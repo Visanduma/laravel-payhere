@@ -15,29 +15,30 @@ class PayHereClient
 
     public function submit()
     {
-        $formData = array_merge($this->authData(),$this->required_data,$this->optional_data);
+        $formData = array_merge($this->authData(), $this->required_data, $this->optional_data);
 
         return Http::asForm()
-            ->post(config('payhere.api_endpoint').$this->url,$formData);
-
-
+            ->post(config('payhere.api_endpoint').$this->url, $formData);
     }
 
     public function data(array $array)
     {
         $this->required_data = $array;
+
         return $this;
     }
 
     public function successUrl($url)
     {
         $this->success_url = $url;
+
         return $this;
     }
 
     public function failUrl($url)
     {
         $this->fail_url = $url;
+
         return $this;
     }
 
@@ -50,5 +51,4 @@ class PayHereClient
             'notify_url' => $this->notify_url ?? 'www.visanduma.com/notify',
         ];
     }
-
 }

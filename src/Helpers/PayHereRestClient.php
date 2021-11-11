@@ -13,17 +13,17 @@ class PayHereRestClient
 
     public function withData(array $data)
     {
-       $this->form_data = $data;
-       return $this;
+        $this->form_data = $data;
 
+        return $this;
     }
 
     public function getAccessToken()
     {
         $url = config('payhere.api_endpoint')."merchant/v1/oauth/token";
-        $data =  Http::asForm()->withToken(config('payhere.auth_code'),'Basic')
-            ->post($url,[
-                'grant_type' => 'client_credentials'
+        $data = Http::asForm()->withToken(config('payhere.auth_code'), 'Basic')
+            ->post($url, [
+                'grant_type' => 'client_credentials',
             ]);
 
         return $data->json()['access_token'] ?? null;
@@ -32,27 +32,24 @@ class PayHereRestClient
     /**
      * @throws PayHereException
      */
-
     public function submit()
     {
-        if($this->method == "post"){
+        if ($this->method == "post") {
             $client = Http::asJson()
                 ->withToken($this->getAccessToken())
-                ->post(config('payhere.api_endpoint').$this->url,$this->form_data);
-        }else{
+                ->post(config('payhere.api_endpoint').$this->url, $this->form_data);
+        } else {
             $client = Http::withToken($this->getAccessToken())
-                ->get(config('payhere.api_endpoint').$this->url,$this->form_data);
+                ->get(config('payhere.api_endpoint').$this->url, $this->form_data);
         }
 
 
         $output = $client->json();
 
-        if($output && $output['status'] < 0){
+        if ($output && $output['status'] < 0) {
             throw new PayHereException($output['msg']);
-        }else{
+        } else {
             return $output;
         }
-
-
     }
 }
