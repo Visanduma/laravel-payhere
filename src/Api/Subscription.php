@@ -2,49 +2,40 @@
 
 namespace Lahirulhr\PayHere\Api;
 
-class Subscription extends Checkout
+use Lahirulhr\PayHere\Helpers\PayHereRestClient;
+
+class Subscription extends PayHereRestClient
 {
-    public function chargeWeekly($weeks = 1)
+    public function getAll()
     {
-        $this->required_data['recurrence'] = "$weeks Week";
-        return $this;
+        $this->method = "get";
+        $this->url = "merchant/v1/subscription";
+        return $this->submit();
     }
 
-    public function chargeMonthly($months = 1)
+    public function getPaymentsOfSubscription(string $subscription_id)
     {
-        $this->required_data['recurrence'] = "$months Month";
-        return $this;
+        $this->method = "get";
+        $this->url = "merchant/v1/subscription/$subscription_id/payments";
+        return $this->submit();
     }
 
-
-    public function chargeAnnually($years = 1)
+    public function retry(string $subscription_id)
     {
-        $this->required_data['recurrence'] = "$years Year";
-        return $this;
+        $this->method = "post";
+        $this->url = "merchant/v1/subscription/retry";
+        $this->form_data['subscription_id'] = $subscription_id;
+
+        return $this->submit();
+
     }
 
-    public function forWeeks($weeks = 1)
+    public function cancel(string $subscription_id)
     {
-        $this->required_data['duration'] = "$weeks Week";
-        return $this;
-    }
+        $this->method = "post";
+        $this->url = "merchant/v1/subscription/cancel";
+        $this->form_data['subscription_id'] = $subscription_id;
 
-    public function forMonths($months = 1)
-    {
-        $this->required_data['duration'] = "$months Month";
-        return $this;
+        return $this->submit();
     }
-
-    public function forYears($years = 1)
-    {
-        $this->required_data['duration'] = "$years Year";
-        return $this;
-    }
-
-    public function forForever()
-    {
-        $this->required_data['duration'] = "Forever";
-        return $this;
-    }
-
 }

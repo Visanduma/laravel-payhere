@@ -51,14 +51,4 @@ class PayHereClient
         ];
     }
 
-    public function getAccessToken()
-    {
-        $url = config('payhere.api_endpoint')."merchant/v1/oauth/token";
-        $data =  Http::asForm()->withToken(config('payhere.auth_code'),'Basic')
-            ->post($url,[
-                'grant_type' => 'client_credentials'
-            ]);
-
-        return $data->json();
-    }
 }
