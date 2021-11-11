@@ -3,8 +3,8 @@
 namespace Lahirulhr\PayHere\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Lahirulhr\PayHere\PayHereServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
