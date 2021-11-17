@@ -2,6 +2,7 @@
 
 namespace Lahirulhr\PayHere\Helpers;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Lahirulhr\PayHere\Exceptions\PayHereException;
 
@@ -20,13 +21,20 @@ class PayHereRestClient
 
     public function getAccessToken()
     {
-        $url = config('payhere.api_endpoint')."merchant/v1/oauth/token";
+        $url = config('payhere.api_endpoint') . "merchant/v1/oauth/token";
         $data = Http::asForm()->withToken(config('payhere.auth_code'), 'Basic')
             ->post($url, [
                 'grant_type' => 'client_credentials',
             ]);
 
         return $data->json()['access_token'] ?? null;
+    }
+
+    public function cachedAccessToken()
+    {
+        return Cache::remember('payhere-access-token', now()->addSeconds(560), function () {
+            return $this->getAccessToken();
+        });
     }
 
     /**
@@ -36,11 +44,11 @@ class PayHereRestClient
     {
         if ($this->method == "post") {
             $client = Http::asJson()
-                ->withToken($this->getAccessToken())
-                ->post(config('payhere.api_endpoint').$this->url, $this->form_data);
+                ->withToken($this->cachedAccessToken())
+                ->post(config('payhere.api_endpoint') . $this->url, $this->form_data);
         } else {
-            $client = Http::withToken($this->getAccessToken())
-                ->get(config('payhere.api_endpoint').$this->url, $this->form_data);
+            $client = Http::withToken($this->cachedAccessToken())
+                ->get(config('payhere.api_endpoint') . $this->url, $this->form_data);
         }
 
 
@@ -50,15 +58,14 @@ class PayHereRestClient
             throw new PayHereException("No data from API !");
         }
 
-        if (array_key_exists('error',$output)) {
+        if (array_key_exists('error', $output)) {
             throw new PayHereException($output['error_description']);
         }
 
 
-        if (array_key_exists('status',$output) && $output['status'] < 0) {
+        if (array_key_exists('status', $output) && $output['status'] < 0) {
             throw new PayHereException($output['msg']);
         }
         return $output;
-
     }
 }
