@@ -22,7 +22,7 @@ class PayHereRestClient
     public function getAccessToken()
     {
         $url = config('payhere.api_endpoint') . "merchant/v1/oauth/token";
-        $data = Http::asForm()->withToken(config('payhere.auth_code'), 'Basic')
+        $data = Http::asForm()->withToken($this->generateAuthCode(), 'Basic')
             ->post($url, [
                 'grant_type' => 'client_credentials',
             ]);
@@ -67,5 +67,10 @@ class PayHereRestClient
             throw new PayHereException($output['msg']);
         }
         return $output;
+    }
+
+    public function generateAuthCode()
+    {
+        return base64_encode(config('payhere.app_id').":". config('payhere.app_secret'));
     }
 }

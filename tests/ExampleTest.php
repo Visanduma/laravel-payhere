@@ -1,6 +1,7 @@
 <?php
 
 use Lahirulhr\PayHere\Exceptions\PayHereException;
+use Lahirulhr\PayHere\Helpers\PayHereRestClient;
 use Lahirulhr\PayHere\PayHere;
 
 it('can read configs', function () {
@@ -193,3 +194,9 @@ it('can capture payment', function () {
         ->reason("reason for capture")
         ->submit();
 })->throws(PayHereException::class);
+
+
+it('can generate auth code', function () {
+    $ob = new PayHereRestClient();
+    expect($ob->generateAuthCode())->toEqual("NE9WeDNhRHNVYVc0SkFkdVhCNGpoYzNQVjo0OVo1UmVQd29JQzRaOHoxelpWaE1FNGp1WEdzcU5BQ0Q4VzdhUUhOTTZTcQ==");
+});
