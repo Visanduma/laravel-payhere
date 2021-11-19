@@ -53,5 +53,12 @@ class Recurring extends Checkout
         return $this;
     }
 
-    
+
+    public function renderView()
+    {
+        $action = $this->getFullApiUrl();
+        $data = $this->getFormData();
+
+        return view("payhere::recurring", compact('action', 'data'));
+    }
 }
