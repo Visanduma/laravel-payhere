@@ -14,7 +14,6 @@ class PayHereClient
     protected $fail_url;
     protected $notify_url;
 
-
     public function submit()
     {
         $formData = array_merge($this->authData(), $this->required_data, $this->optional_data);

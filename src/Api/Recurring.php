@@ -58,6 +58,6 @@ class Recurring extends Checkout
         $action = $this->getFullApiUrl();
         $data = $this->getFormData();
 
-        return view("payhere::recurring",compact('action','data'));
+        return view("payhere::recurring", compact('action', 'data'));
     }
 }
