@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\View\View;
 use Lahirulhr\PayHere\Exceptions\PayHereException;
 use Lahirulhr\PayHere\Helpers\PayHereRestClient;
 use Lahirulhr\PayHere\PayHere;
@@ -32,9 +33,10 @@ it(
             ->data($data)
             ->successUrl('www.visanduma.com')
             ->failUrl('www.visanduma.com')
-            ->submit();
+            ->notifyUrl('www.visanduma.com')
+            ->renderView();
 
-        expect($client->status())->toEqual(200);
+        expect($client)->toBeInstanceOf(View::class);
     }
 );
 
@@ -62,11 +64,12 @@ it(
             ->data($data)
             ->successUrl('www.visanduma.com')
             ->failUrl('www.visanduma.com')
+            ->notifyUrl('www.visanduma.com')
             ->chargeMonthly(2)
             ->forYears()
-            ->submit();
+            ->renderView();
 
-        expect($client->status())->toEqual(200);
+        expect($client)->toBeInstanceOf(View::class);
     }
 );
 
@@ -92,9 +95,10 @@ it('can create preapproval page', function () {
         ->data($data)
         ->successUrl('www.visanduma.com')
         ->failUrl('www.visanduma.com')
-        ->submit();
+        ->notifyUrl('www.visanduma.com')
+        ->renderView();
 
-    expect($client->status())->toEqual(200);
+    expect($client)->toBeInstanceOf(View::class);
 });
 
 it('can get access token', function () {
@@ -120,8 +124,8 @@ it('can catch exception of charge api', function () {
 
 it('can retrieve payment data', function () {
     $client = PayHere::retrieve()
-    ->orderId("od-43784658374534")
-    ->submit();
+        ->orderId("od-43784658374534")
+        ->submit();
 
     expect($client)->toBeArray();
 });
@@ -155,7 +159,7 @@ it('can cancel the subscription (Using FAKE id)', function () {
 it('can make payment refund', function () {
     return  PayHere::refund()
         ->makePaymentRefund('320027150501') // expect error with FAKE payment_id
-            ->note("reason for refund")
+        ->note("reason for refund")
         ->submit();
 })->throws(PayHereException::class);
 
@@ -182,9 +186,9 @@ it('can authorize payment & keep hold on card', function () {
         ->data($data)
         ->successUrl('www.visanduma.com')
         ->failUrl('www.visanduma.com')
-        ->submit();
+        ->renderView();
 
-    expect($client->status())->toEqual(200);
+    expect($client)->toBeInstanceOf(View::class);
 });
 
 it('can capture payment', function () {

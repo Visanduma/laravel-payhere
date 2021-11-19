@@ -15,19 +15,19 @@ class PayHereClient
     protected $notify_url;
 
 
-    public function submit()
-    {
-        $formData = array_merge($this->authData(), $this->required_data, $this->optional_data);
+    // public function submit()
+    // {
+    //     $formData = array_merge($this->authData(), $this->required_data, $this->optional_data);
 
-        $client = Http::asForm()
-            ->post(config('payhere.api_endpoint').$this->url, $formData);
+    //     $client = Http::asForm()
+    //         ->post(config('payhere.api_endpoint').$this->url, $formData);
 
-        if (! $client->body()) {
-            throw new PayHereException();
-        } else {
-            return $client;
-        }
-    }
+    //     if (! $client->body()) {
+    //         throw new PayHereException();
+    //     } else {
+    //         return $client;
+    //     }
+    // }
 
     public function data(array $array)
     {
@@ -50,6 +50,13 @@ class PayHereClient
         return $this;
     }
 
+    public function notifyUrl($url)
+    {
+        $this->notify_url = $url;
+
+        return $this;
+    }
+
     private function authData()
     {
         return [
@@ -68,5 +75,13 @@ class PayHereClient
     public function getFullApiUrl()
     {
         return  config('payhere.api_endpoint') . $this->url;
+    }
+
+    public function renderView()
+    {
+        $action = $this->getFullApiUrl();
+        $data = $this->getFormData();
+
+        return view("payhere::recurring", compact('action', 'data'));
     }
 }
