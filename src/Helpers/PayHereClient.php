@@ -14,6 +14,7 @@ class PayHereClient
     protected $fail_url;
     protected $notify_url;
 
+
     public function submit()
     {
         $formData = array_merge($this->authData(), $this->required_data, $this->optional_data);
@@ -55,7 +56,17 @@ class PayHereClient
             'merchant_id' => config('payhere.merchant_id'),
             'return_url' => $this->success_url,
             'cancel_url' => $this->fail_url,
-            'notify_url' => $this->notify_url ?? 'www.visanduma.com/notify',
+            'notify_url' => $this->notify_url,
         ];
+    }
+
+    public function getFormData()
+    {
+        return array_merge($this->authData(), $this->required_data, $this->optional_data);
+    }
+
+    public function getFullApiUrl()
+    {
+        return  config('payhere.api_endpoint') . $this->url;
     }
 }
