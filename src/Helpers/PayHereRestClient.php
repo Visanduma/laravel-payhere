@@ -54,7 +54,7 @@ class PayHereRestClient
 
         $output = $client->json();
 
-        if (!$output) {
+        if (! $output) {
             throw new PayHereException("No data from API !");
         }
 
@@ -66,11 +66,7 @@ class PayHereRestClient
         if (array_key_exists('status', $output) && $output['status'] < 0) {
             throw new PayHereException($output['msg']);
         }
-        return $output;
-    }
 
-    public function generateAuthCode()
-    {
-        return base64_encode(config('payhere.app_id').":". config('payhere.app_secret'));
+        return $output;
     }
 }
