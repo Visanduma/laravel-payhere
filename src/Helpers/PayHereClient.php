@@ -2,9 +2,7 @@
 
 namespace Lahirulhr\PayHere\Helpers;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Lahirulhr\PayHere\Exceptions\PayHereException;
 
 class PayHereClient
 {
@@ -38,8 +36,7 @@ class PayHereClient
 
     private function setNotifyUrl()
     {
-
-        $this->notify_url = route('payhere.callback',$this->getCallbackKey());
+        $this->notify_url = route('payhere.callback', $this->getCallbackKey());
     }
 
     private function authData()
@@ -55,6 +52,7 @@ class PayHereClient
     public function getFormData()
     {
         $this->setNotifyUrl();
+
         return array_merge($this->authData(), $this->required_data, $this->optional_data);
     }
 
@@ -73,11 +71,11 @@ class PayHereClient
 
     public function getCallbackKey()
     {
-        return Str::replace('\\','_', get_called_class());
+        return Str::replace('\\', '_', get_called_class());
     }
 
     public static function callbackKey()
     {
-        return (new self)->getCallbackKey();
+        return (new self())->getCallbackKey();
     }
 }
