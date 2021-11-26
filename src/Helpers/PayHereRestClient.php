@@ -30,7 +30,6 @@ class PayHereRestClient
         return $data->json()['access_token'] ?? null;
     }
 
-
     public function generateAuthCode()
     {
         return base64_encode(config('payhere.app_id') . ":" . config('payhere.app_secret'));
@@ -60,7 +59,7 @@ class PayHereRestClient
 
         $output = $client->json();
 
-        if (!$output) {
+        if (! $output) {
             throw new PayHereException("No data from API !");
         }
 
