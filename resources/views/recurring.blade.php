@@ -10,7 +10,8 @@
     <div>
         <div>
             <div>
-                <h4>Processing payment ...</h4>
+                <h2>Processing payment ...</h2>
+                <p>Please wait few seconds to continue. you will be automatically redirect to payment page</p>
             </div>
             <form id="payhere-form" action="{{ $action }}" method="POST">
                 @foreach($data as $key => $value)

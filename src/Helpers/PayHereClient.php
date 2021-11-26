@@ -3,6 +3,7 @@
 namespace Lahirulhr\PayHere\Helpers;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Lahirulhr\PayHere\Exceptions\PayHereException;
 
 class PayHereClient
@@ -13,21 +14,6 @@ class PayHereClient
     protected $success_url;
     protected $fail_url;
     protected $notify_url;
-
-
-    // public function submit()
-    // {
-    //     $formData = array_merge($this->authData(), $this->required_data, $this->optional_data);
-
-    //     $client = Http::asForm()
-    //         ->post(config('payhere.api_endpoint').$this->url, $formData);
-
-    //     if (! $client->body()) {
-    //         throw new PayHereException();
-    //     } else {
-    //         return $client;
-    //     }
-    // }
 
     public function data(array $array)
     {
@@ -50,11 +36,10 @@ class PayHereClient
         return $this;
     }
 
-    public function notifyUrl($url)
+    private function setNotifyUrl()
     {
-        $this->notify_url = $url;
 
-        return $this;
+        $this->notify_url = route('payhere.callback',$this->getCallbackKey());
     }
 
     private function authData()
@@ -69,6 +54,7 @@ class PayHereClient
 
     public function getFormData()
     {
+        $this->setNotifyUrl();
         return array_merge($this->authData(), $this->required_data, $this->optional_data);
     }
 
@@ -83,5 +69,15 @@ class PayHereClient
         $data = $this->getFormData();
 
         return view("payhere::recurring", compact('action', 'data'));
+    }
+
+    public function getCallbackKey()
+    {
+        return Str::replace('\\','_', get_called_class());
+    }
+
+    public static function callbackKey()
+    {
+        return (new self)->getCallbackKey();
     }
 }

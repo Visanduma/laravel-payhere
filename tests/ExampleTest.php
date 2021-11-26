@@ -4,6 +4,8 @@ use Illuminate\View\View;
 use Lahirulhr\PayHere\Exceptions\PayHereException;
 use Lahirulhr\PayHere\Helpers\PayHereRestClient;
 use Lahirulhr\PayHere\PayHere;
+use function Pest\Laravel\get;
+use function Pest\Laravel\post;
 
 it('can read configs', function () {
     expect(config('payhere.api_endpoint'))->toBeString();
@@ -33,7 +35,6 @@ it(
             ->data($data)
             ->successUrl('www.visanduma.com')
             ->failUrl('www.visanduma.com')
-            ->notifyUrl('www.visanduma.com')
             ->renderView();
 
         expect($client)->toBeInstanceOf(View::class);
@@ -64,7 +65,6 @@ it(
             ->data($data)
             ->successUrl('www.visanduma.com')
             ->failUrl('www.visanduma.com')
-            ->notifyUrl('www.visanduma.com')
             ->chargeMonthly(2)
             ->forYears()
             ->renderView();
@@ -95,7 +95,6 @@ it('can create preapproval page', function () {
         ->data($data)
         ->successUrl('www.visanduma.com')
         ->failUrl('www.visanduma.com')
-        ->notifyUrl('www.visanduma.com')
         ->renderView();
 
     expect($client)->toBeInstanceOf(View::class);
@@ -203,4 +202,9 @@ it('can capture payment', function () {
 it('can generate auth code', function () {
     $ob = new PayHereRestClient();
     expect($ob->generateAuthCode())->toEqual("NE9WeDNhRHNVYVc0SkFkdVhCNGpoYzNQVjo0OVo1UmVQd29JQzRaOHoxelpWaE1FNGp1WEdzcU5BQ0Q4VzdhUUhOTTZTcQ==");
+});
+
+
+it('has working callback routes',function(){
+    post("/payhere/callback/test")->assertStatus(200);
 });
