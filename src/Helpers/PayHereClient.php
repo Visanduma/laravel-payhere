@@ -39,6 +39,11 @@ class PayHereClient
         $this->notify_url = route('payhere.callback', $this->getCallbackKey());
     }
 
+    public function setOptionalData($data)
+    {
+        $this->optional_data = $data;
+    }
+
     private function authData()
     {
         return [
