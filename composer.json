@@ -1,6 +1,6 @@
 {
     "name": "lahirulhr/laravel-payhere",
-    "description": "This is my package laravel-payhere",
+    "description": "API integration for PayHere payment gateway in Sri Lanka",
     "keywords": [
         "lahirulhr",
         "laravel",
