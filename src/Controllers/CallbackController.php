@@ -27,18 +27,22 @@ class CallbackController extends Controller
             case Authorize::callbackKey():
                 // emit event
                 event(new AuthorizeCallbackEvent($request->all()));
+
                 break;
 
             case Checkout::callbackKey():
                 event(new CheckoutCallbackEvent($request->all()));
+
                 break;
 
             case Recurring::callbackKey():
                 event(new RecurringCallbackEvent($request->all()));
+
                 break;
 
             case PreApproval::callbackKey():
                 event(new PreapprovalCallbackEvent($request->all()));
+
                 break;
 
             case "test":
