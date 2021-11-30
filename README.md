@@ -121,6 +121,10 @@ return [
 
 
 ###### [Checkout API](https://support.payhere.lk/api-&-mobile-sdk/payhere-checkout)
+Checkout API lets you integrate PayHere with your website, web application or any other application in code level.
+ It offers a simple HTML Form to initiate a payment request and redirect
+ your customer to PayHere Payment Gateway to securely process the payment.
+ 
 ```php
 // in your controller
 
