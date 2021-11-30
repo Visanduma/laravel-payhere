@@ -151,22 +151,52 @@ $data = [
 return PayHere::checkOut()
             ->data($data)
             ->setOptionalData() // Set optional data. see PayHere documantaion for available values
-            ->successUrl('www.visanduma.com/payment-success')
-            ->failUrl('www.visanduma.com/payment-fail')
+            ->successUrl('www.visanduma.com/success')
+            ->failUrl('www.visanduma.com/fail')
             ->renderView();
+```
+
+#### Handling the server callback
+PayHere will be notify your application with response data using public url POST request callback. 
+then this package will emit new event with their
+callback data. you just need to listen on event and do any thing you want with payload data.
+
+```php
+            
+// defime listners in your EventServiceProvider.php
+
+class EventServiceProvider extends ServiceProvider
+{
+
+    use Lahirulhr\PayHere\Events\CheckoutCallbackEvent;
+    
+    /**
+     * The event listener mappings for the application.
+     *
+     * @var array
+     */
+    protected $listen = [
+        CheckoutCallbackEvent::class => [
+            // register listners to do something with callback
+        ],
+    ];
+    
+}
+
 ```
 
 
 ###### [Recurring API](https://support.payhere.lk/api-&-mobile-sdk/payhere-recurring)
 Recurring API is accept data array same as checkout API. the only things you need to change checkOut() method
-to recurring()
+to recurring().
+
 
 ```php
 return PayHere::recurring()
             ->data($data)
             ->setOptionalData() // Set optional data. see PayHere documantaion for available values
-            ->successUrl('www.visanduma.com')
-            ->failUrl('www.visanduma.com')
+            ->successUrl('www.visanduma.com/success')
+            ->failUrl('www.visanduma.com/fail')
             ->chargeMonthly(2)
             ->forYears()
             ->renderView();
@@ -187,6 +217,11 @@ PayHere::recurring()->forYears() // set duratoin by years .the default value is 
 PayHere::recurring()->forForever() // set charging period to infinity.
 ```
 
+```php
+// use this event to recieve server callback. see above example on Checkout API 
+RecurringCallbackEvent::class
+```
+
 ###### [Preapproval API](https://support.payhere.lk/api-&-mobile-sdk/payhere-preapproval)
 
 Use same as checkout method
@@ -198,6 +233,11 @@ return PayHere::preapproval()
             ->successUrl('www.visanduma.com/payment-success')
             ->failUrl('www.visanduma.com/payment-fail')
             ->renderView();
+```
+
+```php
+// use this event to recieve server callback. see above example on Checkout API 
+PreapprovalCallbackEvent::class
 ```
 
 ###### [Charging API](https://support.payhere.lk/api-&-mobile-sdk/payhere-charging)
@@ -276,6 +316,11 @@ return PayHere::authorize()
         
 ```
 
+```php
+// use this event to recieve server callback. see above example on Checkout API 
+AuthorizeCallbackEvent::class
+```
+
 ###### [Capture API](https://support.payhere.lk/api-&-mobile-sdk/payhere-capture)
 
 Capture API lets you capture your authorized Hold on Card payments programmatically on demand using the authorization
@@ -293,8 +338,8 @@ $response =  PayHere::capture()
 
 ## TODO
 
+- [x] ~~Events for server callbacks~~
 - [ ] Custom payment redirection page
-- [ ] Events for server callbacks
 - [ ] Custom Error types
 - [ ] Response Data Objects
 - [ ] Optional Data handling

@@ -11,7 +11,13 @@ namespace Lahirulhr\PayHere\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Lahirulhr\PayHere\Api\Authorize;
+use Lahirulhr\PayHere\Api\Checkout;
+use Lahirulhr\PayHere\Api\PreApproval;
+use Lahirulhr\PayHere\Api\Recurring;
 use Lahirulhr\PayHere\Events\AuthorizeCallbackEvent;
+use Lahirulhr\PayHere\Events\CheckoutCallbackEvent;
+use Lahirulhr\PayHere\Events\PreapprovalCallbackEvent;
+use Lahirulhr\PayHere\Events\RecurringCallbackEvent;
 
 class CallbackController extends Controller
 {
@@ -21,7 +27,18 @@ class CallbackController extends Controller
             case Authorize::callbackKey():
                 // emit event
                 event(new AuthorizeCallbackEvent($request->all()));
+                break;
 
+            case Checkout::callbackKey():
+                event(new CheckoutCallbackEvent($request->all()));
+                break;
+
+            case Recurring::callbackKey():
+                event(new RecurringCallbackEvent($request->all()));
+                break;
+
+            case PreApproval::callbackKey():
+                event(new PreapprovalCallbackEvent($request->all()));
                 break;
 
             case "test":
