@@ -8,23 +8,28 @@
 <div align="center">
 
 [<img src="https://www.fourninecloud.com/assets/images/laravel-design.png" height="150px">](http://laravel.com)
-[<img src="https://www.payhere.lk/images/PayHere-Logo.png" height="150px">](http://payhere.lk)
+[<img src="https://www.payhere.lk/images/PayHere-Logo.png" height="100px">](http://payhere.lk)
 
 </div>
 
-Want to use PayHere as payment gateway of your laravel application. don't worry about API handling. use this simple package to connect PayHere API
+Laravel - PayHere was  made to manage PayHere payment gateway on your laravel application with ease. currently this package supports all 
+available methods on official PayHere documentation.
 
-####Available API methods
-* Checkout API
-* Recurring API
-* Preapproval API
-* Charging API
-* Retrieval API
-* Subscription Manager API
-* Refund API
-* Authorize API
-* Capture API
+Read official [Documentation](https://support.payhere.lk/api-&-mobile-sdk/payhere-checkout)  for more information
 
+#### Available API methods
+- [x] Checkout API
+- [x] Recurring API
+- [x] Preapproval API
+- [x] Charging API
+- [x] Retrieval API
+- [x] Subscription Manager API
+- [x] Refund API
+- [x] Authorize API
+- [x] Capture API
+
+
+###### Basic Usage
 ```php
 
 // adding payment details
@@ -42,9 +47,9 @@ $data = [
             'amount' => 4960.00,
         ];
 
-// creating checkout page
+// creating checkout page & redirect user
         
-PayHere::checkOut()
+return PayHere::checkOut()
             ->data($data)
             ->successUrl('www.visanduma.com/payment-success')
             ->failUrl('www.visanduma.com/payment-fail')
@@ -115,7 +120,7 @@ return [
 ## Usage
 
 
-###### Checkout Page
+###### [Checkout API](https://support.payhere.lk/api-&-mobile-sdk/payhere-checkout)
 ```php
 // in your controller
 
@@ -148,7 +153,7 @@ return PayHere::checkOut()
 ```
 
 
-###### Recurring API
+###### [Recurring API](https://support.payhere.lk/api-&-mobile-sdk/payhere-recurring)
 Recurring API is accept data array same as checkout API. the only things you need to change checkOut() method
 to recurring()
 
@@ -178,7 +183,7 @@ PayHere::recurring()->forYears() // set duratoin by years .the default value is 
 PayHere::recurring()->forForever() // set charging period to infinity.
 ```
 
-###### Preapproval API
+###### [Preapproval API](https://support.payhere.lk/api-&-mobile-sdk/payhere-preapproval)
 
 Use same as checkout method
 
@@ -191,7 +196,106 @@ return PayHere::preapproval()
             ->renderView();
 ```
 
+###### [Charging API](https://support.payhere.lk/api-&-mobile-sdk/payhere-charging)
+
+Charging API lets you charge your preapproved customers programatically on demand using the encrypted tokens. it will return response data array on success
+or return PayHereException if any error.
+
+```php
+$data = [
+        "type" => "PAYMENT",
+        "order_id" => "Order12345",
+        "items" => "Taxi Hire 123",
+        "currency" => "LKR",
+        "amount" => 345.67,
+    ];
+
+$response =  PayHere::charge()
+        ->byToken("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx") // customer token
+        ->withData($data)
+        ->submit();
+```
+
+
+###### [Retrieval API](https://support.payhere.lk/api-&-mobile-sdk/payhere-retrieval)
+
+Retrieval API lets you retrieve the details of the Successful payments processed through your PayHere
+
+```php
+$info = PayHere::retrieve()
+        ->orderId("od-43784658374534") // order number that you use to charge from customer
+        ->submit();
+```
+
+##### [Subscription Manager](https://support.payhere.lk/api-&-mobile-sdk/payhere-subscription)
+Subscription Manager API lets you view, retry & cancel your subscription customers programmatically you subscribed from Recurring API.
+
+```php
+// get all subscriptions
+$subscriptions = PayHere::subscription()->getAll();
+
+// get payment details of specific subscription
+$paymentInfo = PayHere::subscription()
+        ->getPaymentsOfSubscription("420075032251"); // subscription ID
+        
+// retry on failed supscription payments
+PayHere::subscription()
+        ->retry("420075032251"); // subscription ID
+        
+// cancel a subscription
+PayHere::subscription()
+        ->cancel("420075032251"); // subscription ID
+```
+
+
+###### [Refund API](https://support.payhere.lk/api-&-mobile-sdk/payhere-refund) 
+Refund API lets you refund your existing payment programmatically.
+
+```php
+PayHere::refund()
+        ->makePaymentRefund('320027150501') // payment_id
+        ->note("Out of stock") // note for refund
+        ->submit();
+```
+
+###### [Authorize API](https://support.payhere.lk/api-&-mobile-sdk/payhere-authorize)
+Authorize API allows you to get your customer authorization for Hold on Card payments. this method will redirect user to payment page
+
+```php
+// use same $data as Checkout method
+
+return PayHere::authorize()
+        ->data($data)
+        ->successUrl('www.visanduma.com/success')
+        ->failUrl('www.visanduma.com/fail')
+        ->renderView();
+        
+```
+
+###### [Capture API](https://support.payhere.lk/api-&-mobile-sdk/payhere-capture)
+
+Capture API lets you capture your authorized Hold on Card payments programmatically on demand using the authorization
+ tokens you retrieved from Payment Authorize API.
+ 
+ ```php
+$response =  PayHere::capture()
+         ->usingToken('e34f3059-7b7d-4b62-a57c-784beaa169f4') // authorization token
+         ->amount(100) // charging amount
+         ->reason("reason for capture")
+         ->submit();
+ ```
+ 
+---
+
 ## TODO
+
+- [ ] Custom payment redirection page
+- [ ] Events for server callbacks
+- [ ] Custom Error types
+- [ ] Response Data Objects
+- [ ] Optional Data handling
+- [ ] Inbuilt subscription database
+- [ ] Server callback log 
 
 ## Testing
 
