@@ -7,4 +7,6 @@
  */
 
 
-Route::post("payhere/callback/{type}",[\Lahirulhr\PayHere\Controllers\CallbackController::class,'handle'])->name('payhere.callback');
+Route::post("payhere/callback/{type}",[\Lahirulhr\PayHere\Controllers\CallbackController::class,'handle'])
+    ->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class)
+    ->name('payhere.callback');

@@ -163,7 +163,7 @@ callback data. you just need to listen on event and do any thing you want with p
 
 ```php
             
-// defime listners in your EventServiceProvider.php
+// define listners in your EventServiceProvider.php
 
 class EventServiceProvider extends ServiceProvider
 {
