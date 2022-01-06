@@ -18,7 +18,7 @@ class RecurringCallbackEvent
     use InteractsWithSockets;
     use SerializesModels;
 
-    private $payload;
+    public $payload;
 
     public function __construct($payload)
     {
