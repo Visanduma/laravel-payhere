@@ -24,29 +24,25 @@ class CallbackController extends Controller
     public function handle($type, Request $request)
     {
         switch ($type) {
-            case Authorize::callbackKey():
-                // emit event
+            case Authorize::getCallbackKey():
                 event(new AuthorizeCallbackEvent($request->all()));
-
                 break;
 
-            case Checkout::callbackKey():
+            case Checkout::getCallbackKey():
                 event(new CheckoutCallbackEvent($request->all()));
-
                 break;
 
-            case Recurring::callbackKey():
+            case Recurring::getCallbackKey():
                 event(new RecurringCallbackEvent($request->all()));
-
                 break;
 
-            case PreApproval::callbackKey():
+            case PreApproval::getCallbackKey():
                 event(new PreapprovalCallbackEvent($request->all()));
-
                 break;
 
             case "test":
                 // emit event two
+                dd('test');
                 break;
         }
     }

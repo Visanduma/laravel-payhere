@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\View\View;
+use Lahirulhr\PayHere\Api\Checkout;
 use Lahirulhr\PayHere\Exceptions\PayHereException;
 use Lahirulhr\PayHere\Helpers\PayHereRestClient;
 use Lahirulhr\PayHere\PayHere;
@@ -205,5 +206,5 @@ it('can generate auth code', function () {
 
 
 it('has working callback routes', function () {
-    post("/payhere/callback/test")->assertStatus(200);
+    post('payhere/callback/'.Checkout::getCallbackKey())->assertStatus(200);
 });

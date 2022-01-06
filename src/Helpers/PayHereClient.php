@@ -2,8 +2,6 @@
 
 namespace Lahirulhr\PayHere\Helpers;
 
-use Illuminate\Support\Str;
-
 class PayHereClient
 {
     protected $url;
@@ -74,13 +72,8 @@ class PayHereClient
         return view("payhere::recurring", compact('action', 'data'));
     }
 
-    public function getCallbackKey()
+    public static function getCallbackKey()
     {
-        return Str::replace('\\', '_', get_called_class());
-    }
-
-    public static function callbackKey()
-    {
-        return (new self())->getCallbackKey();
+        return base64_encode(get_called_class());
     }
 }
