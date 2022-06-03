@@ -7,8 +7,9 @@
 
 <div align="center">
 
-[<img src="https://www.fourninecloud.com/assets/images/laravel-design.png" height="150px">](http://laravel.com)
-[<img src="https://www.payhere.lk/images/PayHere-Logo.png" height="100px">](http://payhere.lk)
+[<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Laravel_logotype_min.svg/2560px-Laravel_logotype_min.svg.png" height="100px">](http://laravel.com)
+    <br>
+[<img src="https://payherestorage.blob.core.windows.net/payhere-resources/www/images/PayHere-Logo.png" height="100px">](http://payhere.lk)
 
 </div>
 
@@ -18,15 +19,15 @@ available methods on official PayHere documentation.
 Read official [Documentation](https://support.payhere.lk/api-&-mobile-sdk/payhere-checkout)  for more information
 
 #### Available API methods
-- [x] Checkout API
-- [x] Recurring API
-- [x] Preapproval API
-- [x] Charging API
-- [x] Retrieval API
-- [x] Subscription Manager API
-- [x] Refund API
-- [x] Authorize API
-- [x] Capture API
+✔️ Checkout API  
+✔️ Recurring API  
+✔️ Preapproval API  
+✔️ Charging API  
+✔️ Retrieval API  
+✔️ Subscription Manager API  
+✔️ Refund API  
+✔️ Authorize API  
+✔️ Capture API  
 
 
 ###### Basic Usage
