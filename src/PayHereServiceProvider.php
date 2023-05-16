@@ -20,7 +20,7 @@ class PayHereServiceProvider extends PackageServiceProvider
             ->hasRoute('web')
             ->hasConfigFile()
             ->hasViews();
-//            ->hasMigration('create_laravel-payhere_table')
-//            ->hasCommand(PayHereCommand::class);
+        //            ->hasMigration('create_laravel-payhere_table')
+        //            ->hasCommand(PayHereCommand::class);
     }
 }
