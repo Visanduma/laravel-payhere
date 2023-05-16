@@ -74,7 +74,7 @@ it(
 );
 
 
-it('can create preapproval page', function () {
+it('can create pre approval page', function () {
     $faker = \Faker\Factory::create();
 
 
@@ -201,10 +201,12 @@ it('can capture payment', function () {
 
 it('can generate auth code', function () {
     $ob = new PayHereRestClient();
-    expect($ob->generateAuthCode())->toEqual("NE9WeDNhRHNVYVc0SkFkdVhCNGpoYzNQVjo0OVo1UmVQd29JQzRaOHoxelpWaE1FNGp1WEdzcU5BQ0Q4VzdhUUhOTTZTcQ==");
+    $code = "NE9WeDNhS2hQbzg0SkREU0lvUkg1bjNMSDo4WDZRd3hCMWF2RTRmWGx3RmwzTWZlNHZXNjdLcVZzeko0dVRQakttczh1Yg==";
+    expect($ob->generateAuthCode())
+        ->toEqual($code);
 });
 
 
 it('has working callback routes', function () {
-    post('payhere/callback/'.Checkout::getCallbackKey())->assertStatus(200);
+    post('payhere/callback/' . Checkout::getCallbackKey())->assertStatus(200);
 });
