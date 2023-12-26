@@ -42,6 +42,19 @@ class PayHereRestClient
         });
     }
 
+    public function generateHash($orderId,$amount,$currency = 'LKR')
+    {
+        return strtoupper(
+            md5(
+                config('payhere.merchant_id') .
+                    $orderId .
+                    number_format($amount, 2, '.', '') .
+                    $currency .
+                    strtoupper(md5(config('payhere.merchant_secret')))
+            )
+        );
+    }
+
     /**
      * @throws PayHereException
      */
