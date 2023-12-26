@@ -42,7 +42,7 @@ class PayHereRestClient
         });
     }
 
-    public function generateHash($orderId,$amount,$currency = 'LKR')
+    public function generateHash($orderId, $amount, $currency = 'LKR')
     {
         return strtoupper(
             md5(
