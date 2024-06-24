@@ -158,10 +158,17 @@ return PayHere::checkOut()
 ```
 
 #### Handling the server callback
-PayHere will be notify your application with response data using public url POST request callback. 
-then this package will emit new event with their
-callback data. you just need to listen on event and do any thing you want with payload data.
+PayHere will be notified your application with response data using public url POST request callback. 
+then this package will emit a new event with their
+callback data. you just need to listen on an event and do anything you want with payload data.
 
+#### Available Events
+* AuthorizeCallbackEvent
+* CheckoutCallbackEvent
+* PreapprovalCallbackEvent
+* RecurringCallbackEvent
+
+Example: 
 ```php
             
 // define listners in your EventServiceProvider.php
@@ -178,10 +185,23 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         CheckoutCallbackEvent::class => [
-            // register listners to do something with callback
+            // register listeners to do something with callback
+            SomeListener::class 
         ],
     ];
     
+}
+
+class SomeListener{
+
+    //....
+    
+     public function handle($event)
+    {
+     // you can access payhere callback data using $event->payload 
+        Log::info($event->payload);
+    }
+
 }
 
 ```

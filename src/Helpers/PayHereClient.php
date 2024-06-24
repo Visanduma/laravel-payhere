@@ -2,6 +2,8 @@
 
 namespace Lahirulhr\PayHere\Helpers;
 
+use Illuminate\Support\Arr;
+
 class PayHereClient
 {
     protected $url;
@@ -60,8 +62,8 @@ class PayHereClient
     public function getFormData()
     {
         $this->setNotifyUrl();
-
-        return array_merge($this->authData(), $this->required_data, $this->optional_data);
+        $hash = ['hash' => $this->getHashKey()];
+        return array_merge($this->authData(), $this->required_data, $this->optional_data, $hash);
     }
 
     public function getFullApiUrl()
@@ -80,5 +82,17 @@ class PayHereClient
     public static function getCallbackKey()
     {
         return base64_encode(get_called_class());
+    }
+
+    public function getHashKey()
+    {
+        $vars = $this->authData();
+        return strtoupper (md5 (
+            $vars['merchant_id']
+            . $this->required_data['order_id']
+            . Arr::get($this->required_data,'amount',0)
+            . $this->required_data['currency']
+            . strtoupper(md5(config('payhere.merchant_secret'))) )
+        );
     }
 }
