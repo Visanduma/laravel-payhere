@@ -6,7 +6,7 @@ use Lahirulhr\PayHere\Helpers\PayHereRestClient;
 
 class Refund extends PayHereRestClient
 {
-    protected $url = "merchant/v1/payment/refund";
+    protected $url = 'merchant/v1/payment/refund';
 
     public function makePaymentRefund(string $payment_id)
     {

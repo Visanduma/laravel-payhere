@@ -6,5 +6,5 @@ use Lahirulhr\PayHere\Helpers\PayHereClient;
 
 class PreApproval extends PayHereClient
 {
-    protected $url = "pay/preapprove";
+    protected $url = 'pay/preapprove';
 }

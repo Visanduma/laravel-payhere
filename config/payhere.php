@@ -7,16 +7,14 @@
 
 return [
 
-
     /*
-     PayHere action url. usually,
+     PayHere api url. usually,
      for production   https://www.payhere.lk
      for testing  https://sandbox.payhere.lk
       remember to update api when production
      * */
 
     'api_endpoint' => env('PAYHERE_API'),
-
 
     /*
       PayHere merchant ID can be found in their dashboard
@@ -34,12 +32,11 @@ return [
      * */
     'merchant_secret' => env('PAYHERE_MERCHANT_SECRET'),
 
-
     /*
      Follow PayHere official instructions to obtain 'app_id' and 'app_secret'.
-     NOTE: you dont need to generate "Authorization code". it will be automatically generate by this package
+     NOTE: you don't need to generate "Authorization code". it will be automatically generate by this package
         *Sign in to your PayHere account & go to Settings > Business Apps section
-        *Click 'Create App' button & enter an app name & comma seperated domains to whilelist
+        *Click 'Create App' button & enter an app name & comma separated domains to whitelist
         *Tick the permission 'Payment Retrieval API'
         *Click 'Add Business App' button to create the app
         *Once the app is created click 'View Credential' button in front of the created app
@@ -47,6 +44,5 @@ return [
      * */
     'app_id' => env('PAYHERE_APP_ID'),
     'app_secret' => env('PAYHERE_APP_SECRET'),
-
 
 ];

@@ -6,7 +6,7 @@ use Lahirulhr\PayHere\Helpers\PayHereRestClient;
 
 class Capture extends PayHereRestClient
 {
-    protected $url = "merchant/v1/payment/capture";
+    protected $url = 'merchant/v1/payment/capture';
 
     public function usingToken(string $authorization_token)
     {
@@ -22,7 +22,7 @@ class Capture extends PayHereRestClient
         return $this;
     }
 
-    public function reason(string $reason = "")
+    public function reason(string $reason = '')
     {
         $this->form_data['deduction_details'] = $reason;
 

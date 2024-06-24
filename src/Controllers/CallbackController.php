@@ -40,15 +40,10 @@ class CallbackController extends Controller
                 break;
 
             case PreApproval::getCallbackKey():
-                event(new PreapprovalCallbackEvent($request->all()));
+                event(new PreApprovalCallbackEvent($request->all()));
 
                 break;
 
-            case "test":
-                // emit event two
-                dd('test');
-
-                break;
         }
     }
 }

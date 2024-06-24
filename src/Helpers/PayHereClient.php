@@ -5,10 +5,15 @@ namespace Lahirulhr\PayHere\Helpers;
 class PayHereClient
 {
     protected $url;
+
     protected $required_data = [];
+
     protected $optional_data = [];
+
     protected $success_url;
+
     protected $fail_url;
+
     protected $notify_url;
 
     public function data(array $array)
@@ -61,7 +66,7 @@ class PayHereClient
 
     public function getFullApiUrl()
     {
-        return  config('payhere.api_endpoint') . $this->url;
+        return config('payhere.api_endpoint').$this->url;
     }
 
     public function renderView()
@@ -69,7 +74,7 @@ class PayHereClient
         $action = $this->getFullApiUrl();
         $data = $this->getFormData();
 
-        return view("payhere::recurring", compact('action', 'data'));
+        return view('payhere::recurring', compact('action', 'data'));
     }
 
     public static function getCallbackKey()

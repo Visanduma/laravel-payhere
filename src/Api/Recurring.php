@@ -48,7 +48,7 @@ class Recurring extends Checkout
 
     public function forForever()
     {
-        $this->required_data['duration'] = "Forever";
+        $this->required_data['duration'] = 'Forever';
 
         return $this;
     }
@@ -58,6 +58,6 @@ class Recurring extends Checkout
         $action = $this->getFullApiUrl();
         $data = $this->getFormData();
 
-        return view("payhere::recurring", compact('action', 'data'));
+        return view('payhere::recurring', compact('action', 'data'));
     }
 }

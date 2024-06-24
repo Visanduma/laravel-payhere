@@ -6,5 +6,5 @@ use Lahirulhr\PayHere\Helpers\PayHereClient;
 
 class Checkout extends PayHereClient
 {
-    protected $url = "pay/checkout";
+    protected $url = 'pay/checkout';
 }

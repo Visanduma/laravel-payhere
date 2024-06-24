@@ -1,8 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-function ask(string $question, string $default = ''): string {
-    $answer = readline($question . ($default ? " ({$default})" : null) . ': ');
+function ask(string $question, string $default = ''): string
+{
+    $answer = readline($question.($default ? " ({$default})" : null).': ');
 
     if (! $answer) {
         return $default;
@@ -11,8 +12,9 @@ function ask(string $question, string $default = ''): string {
     return $answer;
 }
 
-function confirm(string $question, bool $default = false): bool {
-    $answer = ask($question . ' (' . ($default ? 'Y/n' : 'y/N') . ')');
+function confirm(string $question, bool $default = false): bool
+{
+    $answer = ask($question.' ('.($default ? 'Y/n' : 'y/N').')');
 
     if (! $answer) {
         return $default;
@@ -21,15 +23,18 @@ function confirm(string $question, bool $default = false): bool {
     return strtolower($answer) === 'y';
 }
 
-function writeln(string $line): void {
-    echo $line . PHP_EOL;
+function writeln(string $line): void
+{
+    echo $line.PHP_EOL;
 }
 
-function run(string $command): string {
+function run(string $command): string
+{
     return trim(shell_exec($command));
 }
 
-function str_after(string $subject, string $search): string {
+function str_after(string $subject, string $search): string
+{
     $pos = strrpos($subject, $search);
 
     if ($pos === false) {
@@ -39,15 +44,18 @@ function str_after(string $subject, string $search): string {
     return substr($subject, $pos + strlen($search));
 }
 
-function slugify(string $subject): string {
+function slugify(string $subject): string
+{
     return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $subject), '-'));
 }
 
-function title_case(string $subject): string {
+function title_case(string $subject): string
+{
     return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $subject)));
 }
 
-function replace_in_file(string $file, array $replacements): void {
+function replace_in_file(string $file, array $replacements): void
+{
     $contents = file_get_contents($file);
 
     file_put_contents(
@@ -60,7 +68,8 @@ function replace_in_file(string $file, array $replacements): void {
     );
 }
 
-function remove_prefix(string $prefix, string $content): string {
+function remove_prefix(string $prefix, string $content): string
+{
     if (str_starts_with($content, $prefix)) {
         return substr($content, strlen($prefix));
     }
@@ -68,12 +77,14 @@ function remove_prefix(string $prefix, string $content): string {
     return $content;
 }
 
-function replaceForWindows(): array {
+function replaceForWindows(): array
+{
     return preg_split('/\\r\\n|\\r|\\n/', run('dir /S /B * | findstr /v /i .github | findstr /v /i vendor | findstr /v /i '.basename(__FILE__).' | findstr /r /i /M /F:/ ":author :vendor :package VendorName skeleton vendor_name vendor_slug author@domain.com"'));
 }
 
-function replaceForAllOtherOSes(): array {
-    return explode(PHP_EOL, run('grep -E -r -l -i ":author|:vendor|:package|VendorName|skeleton|vendor_name|vendor_slug|author@domain.com" --exclude-dir=vendor ./* ./.github/* | grep -v ' . basename(__FILE__)));
+function replaceForAllOtherOSes(): array
+{
+    return explode(PHP_EOL, run('grep -E -r -l -i ":author|:vendor|:package|VendorName|skeleton|vendor_name|vendor_slug|author@domain.com" --exclude-dir=vendor ./* ./.github/* | grep -v '.basename(__FILE__)));
 }
 
 $gitName = run('git config user.name');
@@ -135,12 +146,12 @@ foreach ($files as $file) {
     ]);
 
     match (true) {
-        str_contains($file, 'src/Skeleton.php') => rename($file, './src/' . $className . '.php'),
-        str_contains($file, 'src/SkeletonServiceProvider.php') => rename($file, './src/' . $className . 'ServiceProvider.php'),
-        str_contains($file, 'src/SkeletonFacade.php') => rename($file, './src/' . $className . 'Facade.php'),
-        str_contains($file, 'src/Commands/SkeletonCommand.php') => rename($file, './src/Commands/' . $className . 'Command.php'),
-        str_contains($file, 'database/migrations/create_skeleton_table.php.stub') => rename($file, './database/migrations/create_' . $packageSlugWithoutPrefix . '_table.php.stub'),
-        str_contains($file, 'config/skeleton.php') => rename($file, './config/' . $packageSlugWithoutPrefix . '.php'),
+        str_contains($file, 'src/Skeleton.php') => rename($file, './src/'.$className.'.php'),
+        str_contains($file, 'src/SkeletonServiceProvider.php') => rename($file, './src/'.$className.'ServiceProvider.php'),
+        str_contains($file, 'src/SkeletonFacade.php') => rename($file, './src/'.$className.'Facade.php'),
+        str_contains($file, 'src/Commands/SkeletonCommand.php') => rename($file, './src/Commands/'.$className.'Command.php'),
+        str_contains($file, 'database/migrations/create_skeleton_table.php.stub') => rename($file, './database/migrations/create_'.$packageSlugWithoutPrefix.'_table.php.stub'),
+        str_contains($file, 'config/skeleton.php') => rename($file, './config/'.$packageSlugWithoutPrefix.'.php'),
         default => [],
     };
 }

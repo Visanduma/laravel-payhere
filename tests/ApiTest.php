@@ -7,16 +7,24 @@ use Lahirulhr\PayHere\Helpers\PayHereRestClient;
 use Lahirulhr\PayHere\PayHere;
 
 use function Pest\Laravel\post;
+use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertNotNull;
 
 it('can read configs', function () {
     expect(config('payhere.api_endpoint'))->toBeString();
 });
 
-it(
-    'can create checkout page',
-    function () {
-        $faker = \Faker\Factory::create();
+it('can obtain access token', function () {
 
+    $client = new PayHereRestClient();
+    $token = $client->getAccessToken();
+    assertNotNull($token);
+    assertEquals($token, $client->cachedAccessToken());
+
+});
+
+it('can create checkout page',function () {
+        $faker = \Faker\Factory::create();
 
         $data = [
             'first_name' => $faker->firstName,
@@ -42,11 +50,8 @@ it(
     }
 );
 
-it(
-    'can create recurring checkout page',
-    function () {
+it('can create recurring checkout page',function () {
         $faker = \Faker\Factory::create();
-
 
         $data = [
             'first_name' => $faker->firstName,
@@ -74,10 +79,8 @@ it(
     }
 );
 
-
 it('can create pre approval page', function () {
     $faker = \Faker\Factory::create();
-
 
     $data = [
         'first_name' => $faker->firstName,
@@ -101,30 +104,24 @@ it('can create pre approval page', function () {
     expect($client)->toBeInstanceOf(View::class);
 });
 
-it('can get access token', function () {
-    $client = (new \Lahirulhr\PayHere\Helpers\PayHereRestClient());
-    expect($client->getAccessToken())->toBeString();
-});
-
 it('can catch exception of charge api', function () {
     $data = [
-        "type" => "PAYMENT",
-        "order_id" => "Order12345",
-        "items" => "Taxi Hire 123",
-        "currency" => "LKR",
-        "amount" => 345.67,
+        'type' => 'PAYMENT',
+        'order_id' => 'Order12345',
+        'items' => 'Taxi Hire 123',
+        'currency' => 'LKR',
+        'amount' => 345.67,
     ];
 
     return PayHere::charge()
-        ->byToken("akshdkajshdjsyyyusydu") // Fake incorrect customer token
+        ->byToken('akshdkajshdjsyyyusydu') // Fake incorrect customer token
         ->withData($data)
         ->submit();
 })->throws(PayHereException::class);
 
-
 it('can retrieve payment data', function () {
     $client = PayHere::retrieve()
-        ->orderId("od-43784658374534")
+        ->orderId('od-43784658374534')
         ->submit();
 
     expect($client)->toBeArray();
@@ -138,35 +135,30 @@ it('can get subscription list', function () {
 
 it('can get payments of subscription', function () {
     $client = PayHere::subscription()
-        ->getPaymentsOfSubscription("420075032251");
+        ->getPaymentsOfSubscription('420075032251');
 
     expect($client)->toBeArray();
 });
 
-
 it('can retry on failed subscription (Using FAKE id)', function () {
-    return  PayHere::subscription()
-        ->retry("420075032251"); // fake subscription id expect error
+    return PayHere::subscription()
+        ->retry('420075032251'); // fake subscription id expect error
 })->throws(PayHereException::class);
-
 
 it('can cancel the subscription (Using FAKE id)', function () {
-    return  PayHere::subscription()
-        ->cancel("420075032251"); // fake subscription id expect error
+    return PayHere::subscription()
+        ->cancel('420075032251'); // fake subscription id expect error
 })->throws(PayHereException::class);
 
-
 it('can make payment refund', function () {
-    return  PayHere::refund()
+    return PayHere::refund()
         ->makePaymentRefund('320027150501') // expect error with FAKE payment_id
-        ->note("reason for refund")
+        ->note('reason for refund')
         ->submit();
 })->throws(PayHereException::class);
 
-
 it('can authorize payment & keep hold on card', function () {
     $faker = \Faker\Factory::create();
-
 
     $data = [
         'first_name' => $faker->firstName,
@@ -192,22 +184,20 @@ it('can authorize payment & keep hold on card', function () {
 });
 
 it('can capture payment', function () {
-    return  PayHere::capture()
+    return PayHere::capture()
         ->usingToken('e34f3059-7b7d-4b62-a57c-784beaa169f4')
         ->amount(100)
-        ->reason("reason for capture")
+        ->reason('reason for capture')
         ->submit();
 })->throws(PayHereException::class);
 
-
 it('can generate auth code', function () {
     $ob = new PayHereRestClient();
-    $code = "NE9WeDNhS2hQbzg0SkREU0lvUkg1bjNMSDo4WDZRd3hCMWF2RTRmWGx3RmwzTWZlNHZXNjdLcVZzeko0dVRQakttczh1Yg==";
+    $code = 'NE9WeDNhS2hQbzg0SkREU0lvUkg1bjNMSDo4WDZRd3hCMWF2RTRmWGx3RmwzTWZlNHZXNjdLcVZzeko0dVRQakttczh1Yg==';
     expect($ob->generateAuthCode())
         ->toEqual($code);
 });
 
-
 it('has working callback routes', function () {
-    post('payhere/callback/' . Checkout::getCallbackKey())->assertStatus(200);
+    post('payhere/callback/'.Checkout::getCallbackKey())->assertStatus(200);
 });
