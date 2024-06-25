@@ -23,7 +23,8 @@ class PayHereRestClient
 
     public function getAccessToken()
     {
-        $url = config('payhere.api_endpoint').'merchant/v1/oauth/token';
+        $url = $this->apiUrl('merchant/v1/oauth/token');
+
         $data = Http::asForm()
             ->withToken($this->generateAuthCode(), 'Basic')
             ->post($url, [
@@ -66,10 +67,10 @@ class PayHereRestClient
         if ($this->method == 'post') {
             $client = Http::asJson()
                 ->withToken($this->cachedAccessToken())
-                ->post(config('payhere.api_endpoint').$this->url, $this->form_data);
+                ->post($this->apiUrl($this->url), $this->form_data);
         } else {
             $client = Http::withToken($this->cachedAccessToken())
-                ->get(config('payhere.api_endpoint').$this->url, $this->form_data);
+                ->get($this->apiUrl($this->url), $this->form_data);
         }
 
         $output = $client->json();
@@ -87,5 +88,13 @@ class PayHereRestClient
         }
 
         return $output;
+    }
+
+    private function apiUrl($path = '')
+    {
+        return str(config('payhere.api_endpoint'))
+            ->finish('/')
+            ->append($path)
+            ->toString();
     }
 }
