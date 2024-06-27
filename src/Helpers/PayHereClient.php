@@ -73,12 +73,24 @@ class PayHereClient
             ->toString();
     }
 
-    public function renderView()
+    public function getFormUrl(): string
     {
         $action = $this->getFullApiUrl();
         $data = $this->getFormData();
 
-        return view('payhere::recurring', compact('action', 'data'));
+        $payload = encrypt([
+            'action' => $action,
+            'data' => $data,
+        ]);
+
+        return url('payhere/form?payload='.$payload);
+    }
+
+    public function renderView()
+    {
+
+        return redirect($this->getFormUrl());
+
     }
 
     public static function getCallbackKey()
