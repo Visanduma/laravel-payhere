@@ -16,7 +16,7 @@ use Lahirulhr\PayHere\Api\PreApproval;
 use Lahirulhr\PayHere\Api\Recurring;
 use Lahirulhr\PayHere\Events\AuthorizeCallbackEvent;
 use Lahirulhr\PayHere\Events\CheckoutCallbackEvent;
-use Lahirulhr\PayHere\Events\PreapprovalCallbackEvent;
+use Lahirulhr\PayHere\Events\PreApprovalCallbackEvent;
 use Lahirulhr\PayHere\Events\RecurringCallbackEvent;
 
 class CallbackController extends Controller

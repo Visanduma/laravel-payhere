@@ -109,10 +109,12 @@ class PayHereClient
     {
         $vars = $this->authData();
 
+        $amount = $this->required_data['amount'] ?? 0;
+
         return strtoupper(md5(
             $vars['merchant_id']
             .$this->required_data['order_id']
-            .number_format($this->required_data['amount'], 2, '.', '')
+            .number_format($amount, 2, '.', '')
             .$this->required_data['currency']
             .strtoupper(md5(config('payhere.merchant_secret'))))
         );
