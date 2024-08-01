@@ -1,7 +1,17 @@
 <?php
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
+use Lahirulhr\PayHere\Api\Authorize;
 use Lahirulhr\PayHere\Api\Checkout;
+use Lahirulhr\PayHere\Api\PreApproval;
+use Lahirulhr\PayHere\Api\Recurring;
+use Lahirulhr\PayHere\Events\AuthorizeCallbackEvent;
+use Lahirulhr\PayHere\Events\CheckoutCallbackEvent;
+use Lahirulhr\PayHere\Events\PreApprovalCallbackEvent;
+use Lahirulhr\PayHere\Events\RecurringCallbackEvent;
 use Lahirulhr\PayHere\Exceptions\PayHereException;
 use Lahirulhr\PayHere\Helpers\PayHereRestClient;
 use Lahirulhr\PayHere\PayHere;
@@ -16,67 +26,84 @@ it('can read configs', function () {
 
 it('can obtain access token', function () {
 
+    $response = <<<'JSON'
+        {
+            "access_token": "cb5c47fd-741c-489a-b69e-fd73155ca34e",
+            "token_type": "bearer",
+            "expires_in": 599,
+            "scope": "SANDBOX"
+        }
+    JSON;
+
+    Http::fake([
+        'payhere.lk/*' => Http::response(json_decode($response, true)),
+    ]);
+
     $client = new PayHereRestClient();
     $token = $client->getAccessToken();
+
+    assertEquals($token, 'cb5c47fd-741c-489a-b69e-fd73155ca34e');
+
     assertNotNull($token);
+
     assertEquals($token, $client->cachedAccessToken());
 
 });
 
-it('can create checkout page',function () {
-        $faker = \Faker\Factory::create();
+it('can create checkout page', function () {
+    $faker = \Faker\Factory::create();
 
-        $data = [
-            'first_name' => $faker->firstName,
-            'last_name' => $faker->lastName,
-            'email' => $faker->email,
-            'phone' => $faker->phoneNumber,
-            'address' => $faker->address,
-            'city' => $faker->city,
-            'country' => $faker->country,
-            'order_id' => $faker->asciify(),
-            'items' => $faker->word(),
-            'currency' => 'USD',
-            'amount' => $faker->numberBetween(100, 1000),
-        ];
+    $data = [
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+        'email' => $faker->email,
+        'phone' => $faker->phoneNumber,
+        'address' => $faker->address,
+        'city' => $faker->city,
+        'country' => $faker->country,
+        'order_id' => $faker->asciify(),
+        'items' => $faker->word(),
+        'currency' => 'USD',
+        'amount' => $faker->numberBetween(100, 1000),
+    ];
 
-        $client = PayHere::checkOut()
-            ->data($data)
-            ->successUrl('www.visanduma.com')
-            ->failUrl('www.visanduma.com')
-            ->renderView();
+    $client = PayHere::checkOut()
+        ->data($data)
+        ->successUrl('www.visanduma.com')
+        ->failUrl('www.visanduma.com')
+        ->renderView();
 
-        expect($client)->toBeInstanceOf(View::class);
-    }
+    expect($client)->toBeInstanceOf(RedirectResponse::class);
+}
 );
 
-it('can create recurring checkout page',function () {
-        $faker = \Faker\Factory::create();
+it('can create recurring checkout page', function () {
+    $faker = \Faker\Factory::create();
 
-        $data = [
-            'first_name' => $faker->firstName,
-            'last_name' => $faker->lastName,
-            'email' => $faker->email,
-            'phone' => $faker->phoneNumber,
-            'address' => $faker->address,
-            'city' => $faker->city,
-            'country' => $faker->country,
-            'order_id' => $faker->asciify(),
-            'items' => $faker->word(),
-            'currency' => 'USD',
-            'amount' => $faker->numberBetween(100, 1000),
-        ];
+    $data = [
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+        'email' => $faker->email,
+        'phone' => $faker->phoneNumber,
+        'address' => $faker->address,
+        'city' => $faker->city,
+        'country' => $faker->country,
+        'order_id' => $faker->asciify(),
+        'items' => $faker->word(),
+        'currency' => 'USD',
+        'amount' => $faker->numberBetween(100, 1000),
+    ];
 
-        $client = PayHere::recurring()
-            ->data($data)
-            ->successUrl('www.visanduma.com')
-            ->failUrl('www.visanduma.com')
-            ->chargeMonthly(2)
-            ->forYears()
-            ->renderView();
+    $client = PayHere::recurring()
+        ->data($data)
+        ->successUrl('www.visanduma.com')
+        ->failUrl('www.visanduma.com')
+        ->chargeMonthly(2)
+        ->forYears()
+        ->renderView();
 
-        expect($client)->toBeInstanceOf(View::class);
-    }
+    expect($client)->toBeInstanceOf(View::class);
+}
 );
 
 it('can create pre approval page', function () {
@@ -93,6 +120,7 @@ it('can create pre approval page', function () {
         'order_id' => $faker->asciify(),
         'items' => $faker->word(),
         'currency' => 'USD',
+
     ];
 
     $client = PayHere::preapproval()
@@ -101,7 +129,7 @@ it('can create pre approval page', function () {
         ->failUrl('www.visanduma.com')
         ->renderView();
 
-    expect($client)->toBeInstanceOf(View::class);
+    expect($client)->toBeInstanceOf(RedirectResponse::class);
 });
 
 it('can catch exception of charge api', function () {
@@ -180,15 +208,55 @@ it('can authorize payment & keep hold on card', function () {
         ->failUrl('www.visanduma.com')
         ->renderView();
 
-    expect($client)->toBeInstanceOf(View::class);
+    expect($client)->toBeInstanceOf(RedirectResponse::class);
 });
 
 it('can capture payment', function () {
-    return PayHere::capture()
+
+    $success = <<<'JSON'
+        {
+            "msg": "Automatic payment charged successfully",
+            "data": {
+                "order_id": "Order12345",
+                "items": "Taxi Hire 123",
+                "currency": "LKR",
+                "amount": 345.67,
+                "custom_1": null,
+                "custom_2": null,
+                "payment_id": 320025021815,
+                "status_code": 2,
+                "status_message": "Successfully completed the test tokenized payment.",
+                "md5sig": "A098FEBCC06293734641770555B4D569",
+                "authorization_token": "74d7f304-7f9d-481d-b47f-6c9cad32d3d5"
+            }
+        }
+    JSON;
+
+    $error = <<<'JSON'
+        {
+        "error": "invalid_token",
+        "error_description": "Invalid access token: e291493a-99a5-4177-9c8b-e8cd18ee9f85"
+        }
+    JSON;
+
+    Http::fakeSequence()
+        ->push(json_decode($success, true))
+        ->push(json_decode($error, true));
+
+    $response = PayHere::capture()
         ->usingToken('e34f3059-7b7d-4b62-a57c-784beaa169f4')
         ->amount(100)
         ->reason('reason for capture')
         ->submit();
+
+    assertNotNull($response);
+
+    $response = PayHere::capture()
+        ->usingToken('e34f3059-7b7d-4b62-a57c-784beaa169f4')
+        ->amount(100)
+        ->reason('reason for capture')
+        ->submit();
+
 })->throws(PayHereException::class);
 
 it('can generate auth code', function () {
@@ -198,6 +266,17 @@ it('can generate auth code', function () {
         ->toEqual($code);
 });
 
-it('has working callback routes', function () {
-    post('payhere/callback/'.Checkout::getCallbackKey())->assertStatus(200);
-});
+it('can fire accurate events on webhook', function ($webhookKey, $event) {
+    Event::fake();
+
+    post('payhere/callback/'.$webhookKey)->assertOk();
+
+    Event::assertDispatched($event);
+
+})
+    ->with([
+        [Authorize::getCallbackKey(), AuthorizeCallbackEvent::class],
+        [Checkout::getCallbackKey(), CheckoutCallbackEvent::class],
+        [Recurring::getCallbackKey(), RecurringCallbackEvent::class],
+        [PreApproval::getCallbackKey(), PreApprovalCallbackEvent::class],
+    ]);
